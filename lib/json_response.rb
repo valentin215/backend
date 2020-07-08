@@ -20,16 +20,18 @@ class JsonResponse
       Package.new(informations: package_informations)
     end
     
+    country_distance_hash = @json_input.dig('country_distance')
     deliveries = packages.map do |package|
-      Delivery.new(package: package, carrier: Carrier.new(informations: hash_carriers[package.carrier_type]))
+      Delivery.new(package: package, carrier: Carrier.new(informations: hash_carriers[package.carrier_type]), country_distance: country_distance_hash)
     end
 
     final_deliveries = {}
     arr_deliveries = []
     deliveries.each do |delivery|
       arr_deliveries << {
-         "package_id": delivery.package_id,
-        "expected_delivery": delivery.expected_date
+        "package_id": delivery.package_id,
+        "expected_delivery": delivery.expected_date,
+        "oversea_delay": delivery.oversea_delay
       }
     end
     final_deliveries["deliveries"] = arr_deliveries
